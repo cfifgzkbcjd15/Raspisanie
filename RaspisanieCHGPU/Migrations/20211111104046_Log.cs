@@ -27,7 +27,8 @@ namespace Raspisanie.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FIO = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UniversityOrCollege = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EducationalInstitutions = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Faculty = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -49,7 +50,7 @@ namespace Raspisanie.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "educationalInstitutions",
+                name: "EducationalInstitutions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -58,11 +59,11 @@ namespace Raspisanie.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_educationalInstitutions", x => x.Id);
+                    table.PrimaryKey("PK_EducationalInstitutions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "lectures",
+                name: "Lectures",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -71,23 +72,24 @@ namespace Raspisanie.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_lectures", x => x.Id);
+                    table.PrimaryKey("PK_Lectures", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "subGroups",
+                name: "Levels",
                 columns: table => new
                 {
-                    Id = table.Column<byte>(type: "tinyint", nullable: false),
-                    Name = table.Column<byte>(type: "tinyint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_subGroups", x => x.Id);
+                    table.PrimaryKey("PK_Levels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "teachers",
+                name: "Specializations",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -96,20 +98,47 @@ namespace Raspisanie.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_teachers", x => x.Id);
+                    table.PrimaryKey("PK_Specializations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "times",
+                name: "SubGroups",
                 columns: table => new
                 {
-                    Id = table.Column<byte>(type: "tinyint", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubGroups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teachers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Times",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndOfDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_times", x => x.Id);
+                    table.PrimaryKey("PK_Times", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,78 +248,90 @@ namespace Raspisanie.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "groups",
+                name: "Groups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    subGroupsId = table.Column<byte>(type: "tinyint", nullable: true)
+                    subGroupsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_groups", x => x.Id);
+                    table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_groups_subGroups_subGroupsId",
+                        name: "FK_Groups_SubGroups_subGroupsId",
                         column: x => x.subGroupsId,
-                        principalTable: "subGroups",
+                        principalTable: "SubGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Raspisanies",
+                name: "Schedule",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Star = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    groupId = table.Column<int>(type: "int", nullable: true),
-                    lectureId = table.Column<long>(type: "bigint", nullable: true),
-                    timeId = table.Column<byte>(type: "tinyint", nullable: true),
+                    GroupId = table.Column<int>(type: "int", nullable: true),
+                    LectureId = table.Column<long>(type: "bigint", nullable: true),
+                    TimeId = table.Column<int>(type: "int", nullable: true),
                     Day = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    teachersId = table.Column<long>(type: "bigint", nullable: true),
-                    universityOrCollegeId = table.Column<int>(type: "int", nullable: true),
+                    TeachersId = table.Column<long>(type: "bigint", nullable: true),
+                    EducationalInstitutionsId = table.Column<int>(type: "int", nullable: true),
                     TrainingFormat = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Room = table.Column<int>(type: "int", nullable: false),
                     Korpus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Faculty = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LevelId = table.Column<int>(type: "int", nullable: true),
+                    SpecializationId = table.Column<long>(type: "bigint", nullable: true),
                     FormOfTraining = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Course = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Raspisanies", x => x.Id);
+                    table.PrimaryKey("PK_Schedule", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Raspisanies_educationalInstitutions_universityOrCollegeId",
-                        column: x => x.universityOrCollegeId,
-                        principalTable: "educationalInstitutions",
+                        name: "FK_Schedule_EducationalInstitutions_EducationalInstitutionsId",
+                        column: x => x.EducationalInstitutionsId,
+                        principalTable: "EducationalInstitutions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Raspisanies_groups_groupId",
-                        column: x => x.groupId,
-                        principalTable: "groups",
+                        name: "FK_Schedule_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Raspisanies_lectures_lectureId",
-                        column: x => x.lectureId,
-                        principalTable: "lectures",
+                        name: "FK_Schedule_Lectures_LectureId",
+                        column: x => x.LectureId,
+                        principalTable: "Lectures",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Raspisanies_teachers_teachersId",
-                        column: x => x.teachersId,
-                        principalTable: "teachers",
+                        name: "FK_Schedule_Levels_LevelId",
+                        column: x => x.LevelId,
+                        principalTable: "Levels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Raspisanies_times_timeId",
-                        column: x => x.timeId,
-                        principalTable: "times",
+                        name: "FK_Schedule_Specializations_SpecializationId",
+                        column: x => x.SpecializationId,
+                        principalTable: "Specializations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Schedule_Teachers_TeachersId",
+                        column: x => x.TeachersId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Schedule_Times_TimeId",
+                        column: x => x.TimeId,
+                        principalTable: "Times",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -335,34 +376,44 @@ namespace Raspisanie.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_groups_subGroupsId",
-                table: "groups",
+                name: "IX_Groups_subGroupsId",
+                table: "Groups",
                 column: "subGroupsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Raspisanies_groupId",
-                table: "Raspisanies",
-                column: "groupId");
+                name: "IX_Schedule_EducationalInstitutionsId",
+                table: "Schedule",
+                column: "EducationalInstitutionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Raspisanies_lectureId",
-                table: "Raspisanies",
-                column: "lectureId");
+                name: "IX_Schedule_GroupId",
+                table: "Schedule",
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Raspisanies_teachersId",
-                table: "Raspisanies",
-                column: "teachersId");
+                name: "IX_Schedule_LectureId",
+                table: "Schedule",
+                column: "LectureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Raspisanies_timeId",
-                table: "Raspisanies",
-                column: "timeId");
+                name: "IX_Schedule_LevelId",
+                table: "Schedule",
+                column: "LevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Raspisanies_universityOrCollegeId",
-                table: "Raspisanies",
-                column: "universityOrCollegeId");
+                name: "IX_Schedule_SpecializationId",
+                table: "Schedule",
+                column: "SpecializationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedule_TeachersId",
+                table: "Schedule",
+                column: "TeachersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedule_TimeId",
+                table: "Schedule",
+                column: "TimeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -383,7 +434,7 @@ namespace Raspisanie.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Raspisanies");
+                name: "Schedule");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -392,22 +443,28 @@ namespace Raspisanie.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "educationalInstitutions");
+                name: "EducationalInstitutions");
 
             migrationBuilder.DropTable(
-                name: "groups");
+                name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "lectures");
+                name: "Lectures");
 
             migrationBuilder.DropTable(
-                name: "teachers");
+                name: "Levels");
 
             migrationBuilder.DropTable(
-                name: "times");
+                name: "Specializations");
 
             migrationBuilder.DropTable(
-                name: "subGroups");
+                name: "Teachers");
+
+            migrationBuilder.DropTable(
+                name: "Times");
+
+            migrationBuilder.DropTable(
+                name: "SubGroups");
         }
     }
 }

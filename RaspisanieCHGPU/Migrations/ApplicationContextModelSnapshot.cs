@@ -162,10 +162,10 @@ namespace Raspisanie.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("educationalInstitutions");
+                    b.ToTable("EducationalInstitutions");
                 });
 
-            modelBuilder.Entity("Raspisanie.Models.Group", b =>
+            modelBuilder.Entity("Raspisanie.Models.Groups", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,14 +175,14 @@ namespace Raspisanie.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte?>("subGroupsId")
-                        .HasColumnType("tinyint");
+                    b.Property<int?>("subGroupsId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("subGroupsId");
 
-                    b.ToTable("groups");
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("Raspisanie.Models.Lecture", b =>
@@ -197,10 +197,25 @@ namespace Raspisanie.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("lectures");
+                    b.ToTable("Lectures");
                 });
 
-            modelBuilder.Entity("Raspisanie.Models.Raspisanies", b =>
+            modelBuilder.Entity("Raspisanie.Models.Levels", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Levels");
+                });
+
+            modelBuilder.Entity("Raspisanie.Models.Schedule", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,71 +228,92 @@ namespace Raspisanie.Migrations
                     b.Property<DateTime>("Day")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("EducationalInstitutionsId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Faculty")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FormOfTraining")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Korpus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Level")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long?>("LectureId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("LevelId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Room")
                         .HasColumnType("int");
 
-                    b.Property<string>("Specialization")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long?>("SpecializationId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Star")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("TeachersId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("TimeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TrainingFormat")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("groupId")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.Property<long?>("lectureId")
-                        .HasColumnType("bigint");
+                    b.HasIndex("EducationalInstitutionsId");
 
-                    b.Property<long?>("teachersId")
-                        .HasColumnType("bigint");
+                    b.HasIndex("GroupId");
 
-                    b.Property<byte?>("timeId")
-                        .HasColumnType("tinyint");
+                    b.HasIndex("LectureId");
 
-                    b.Property<int?>("universityOrCollegeId")
-                        .HasColumnType("int");
+                    b.HasIndex("LevelId");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.HasIndex("TimeId");
+
+                    b.ToTable("Schedule");
+                });
+
+            modelBuilder.Entity("Raspisanie.Models.Specialization", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("groupId");
-
-                    b.HasIndex("lectureId");
-
-                    b.HasIndex("teachersId");
-
-                    b.HasIndex("timeId");
-
-                    b.HasIndex("universityOrCollegeId");
-
-                    b.ToTable("Raspisanies");
+                    b.ToTable("Specializations");
                 });
 
             modelBuilder.Entity("Raspisanie.Models.SubGroups", b =>
                 {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<byte>("Name")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("Name")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("subGroups");
+                    b.ToTable("SubGroups");
                 });
 
             modelBuilder.Entity("Raspisanie.Models.Teachers", b =>
@@ -292,13 +328,15 @@ namespace Raspisanie.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("teachers");
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("Raspisanie.Models.Time", b =>
                 {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("EndOfDate")
                         .HasColumnType("datetime2");
@@ -308,7 +346,7 @@ namespace Raspisanie.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("times");
+                    b.ToTable("Times");
                 });
 
             modelBuilder.Entity("Raspisanie.Models.User", b =>
@@ -323,6 +361,9 @@ namespace Raspisanie.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EducationalInstitutions")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -331,6 +372,9 @@ namespace Raspisanie.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FIO")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Faculty")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -361,9 +405,6 @@ namespace Raspisanie.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
-
-                    b.Property<string>("UniversityOrCollege")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -433,7 +474,7 @@ namespace Raspisanie.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Raspisanie.Models.Group", b =>
+            modelBuilder.Entity("Raspisanie.Models.Groups", b =>
                 {
                     b.HasOne("Raspisanie.Models.SubGroups", "subGroups")
                         .WithMany()
@@ -442,37 +483,49 @@ namespace Raspisanie.Migrations
                     b.Navigation("subGroups");
                 });
 
-            modelBuilder.Entity("Raspisanie.Models.Raspisanies", b =>
+            modelBuilder.Entity("Raspisanie.Models.Schedule", b =>
                 {
-                    b.HasOne("Raspisanie.Models.Group", "group")
+                    b.HasOne("Raspisanie.Models.EducationalInstitutions", "EducationalInstitutions")
                         .WithMany()
-                        .HasForeignKey("groupId");
+                        .HasForeignKey("EducationalInstitutionsId");
 
-                    b.HasOne("Raspisanie.Models.Lecture", "lecture")
+                    b.HasOne("Raspisanie.Models.Groups", "Group")
                         .WithMany()
-                        .HasForeignKey("lectureId");
+                        .HasForeignKey("GroupId");
 
-                    b.HasOne("Raspisanie.Models.Teachers", "teachers")
+                    b.HasOne("Raspisanie.Models.Lecture", "Lecture")
                         .WithMany()
-                        .HasForeignKey("teachersId");
+                        .HasForeignKey("LectureId");
 
-                    b.HasOne("Raspisanie.Models.Time", "time")
+                    b.HasOne("Raspisanie.Models.Levels", "Level")
                         .WithMany()
-                        .HasForeignKey("timeId");
+                        .HasForeignKey("LevelId");
 
-                    b.HasOne("Raspisanie.Models.EducationalInstitutions", "universityOrCollege")
+                    b.HasOne("Raspisanie.Models.Specialization", "Specialization")
                         .WithMany()
-                        .HasForeignKey("universityOrCollegeId");
+                        .HasForeignKey("SpecializationId");
 
-                    b.Navigation("group");
+                    b.HasOne("Raspisanie.Models.Teachers", "Teachers")
+                        .WithMany()
+                        .HasForeignKey("TeachersId");
 
-                    b.Navigation("lecture");
+                    b.HasOne("Raspisanie.Models.Time", "Time")
+                        .WithMany()
+                        .HasForeignKey("TimeId");
 
-                    b.Navigation("teachers");
+                    b.Navigation("EducationalInstitutions");
 
-                    b.Navigation("time");
+                    b.Navigation("Group");
 
-                    b.Navigation("universityOrCollege");
+                    b.Navigation("Lecture");
+
+                    b.Navigation("Level");
+
+                    b.Navigation("Specialization");
+
+                    b.Navigation("Teachers");
+
+                    b.Navigation("Time");
                 });
 #pragma warning restore 612, 618
         }

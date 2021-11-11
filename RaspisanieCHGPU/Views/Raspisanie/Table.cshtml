@@ -6,7 +6,6 @@
     var schedule = ViewBag.Schedule as List<Schedule>;
 }
 <style>
-    
 </style>
 <form asp-action="addLine" asp-controller="Raspisanie" method="post">
     <table>
@@ -109,6 +108,8 @@
                 <input hidden asp-for="TrainingFormat" value="@ViewBag.TrainingFormat" />
                 <input hidden asp-for="Level.Name" value="@ViewBag.Level" />
                 <input hidden asp-for="Specialization.Name" value="@ViewBag.Specialization" />
+                <input hidden asp-for="EducationalInstitutions.Name" value="@ViewBag.EducationalInstitutions" />
+                <input hidden asp-for="Course" value="@ViewBag.Course" />
             </td>
         </tr>
     </table>

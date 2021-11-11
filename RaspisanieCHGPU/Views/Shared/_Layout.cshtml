@@ -23,13 +23,10 @@
             <div class="container" style="width:100%;">
                 <a class="navbar-brand" style="color: rgb(108 108 255);" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Начальная страница</a>
-                    </li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Raspisanie" asp-action="Table">Расписание</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Raspisanie" asp-action="Index">Расписание</a>
                         </li>
                         <li class="nav-item" style="margin-left:auto">
                             <form method="post" asp-controller="Account" asp-action="Logout">
